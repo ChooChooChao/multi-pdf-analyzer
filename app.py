@@ -1,7 +1,11 @@
 import streamlit as st
+from dotenv import load_dotenv
+
 
 
 def main():
+    load_dotenv() # allows langchain access to api keys in .env file
+
     st.set_page_config(page_title="Chat with multiple PDFs", page_icon=":books:") # tab/page title
 
     st.header("Chat with multiple PDFs :books:") # Main header on webpage
