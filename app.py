@@ -2,6 +2,8 @@ import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 
 def get_pdf_text(pdf_docs):
     text = ""
@@ -20,6 +22,11 @@ def get_text_chunks(raw_text):
     )
     chunks = text_splitter.split_text(raw_text) # returns list of chunks
     return chunks
+
+def get_vector_store(text_chunks):
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
+    return vectorstore
 
 def main():
     load_dotenv() # allows langchain access to api keys in .env file
@@ -41,10 +48,10 @@ def main():
 
                 # get the text chunks
                 text_chunks = get_text_chunks(raw_text)
-                st.write(text_chunks)
+                # st.write(text_chunks)
 
                 # create vector store
-
+                vector_store = get_vector_store(text_chunks)
 
 if __name__ == "__main__":
     main()
